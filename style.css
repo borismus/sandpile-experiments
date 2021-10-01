@@ -1,0 +1,9 @@
+canvas {
+  width: 800px;
+  height: 800x;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+}
