@@ -15,7 +15,7 @@ export class SideRenderer {
     const grid = this.model.grid;
     const row = Math.floor(grid.length / 2);
     const centerRow = grid[row];
-    for (let col = 0; col < grid[row].length; col++) {
+    for (let col = 0; col < centerRow.length; col++) {
       const x = col * this.cellSize;
       const width = this.cellSize - this.cellSpacing;
       const height = this.cellSize - this.cellSpacing;

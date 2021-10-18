@@ -18,8 +18,8 @@ export class HeatmapRenderer {
       for (let col = 0; col < grid[0].length; col++) {
         const x = col * this.cellSize;
         const y = row * this.cellSize;
-        const width = this.cellSize - 1;
-        const height = this.cellSize - 1;
+        const width = this.cellSize - this.cellSpacing;
+        const height = this.cellSize - this.cellSpacing;
         const grainCount = grid[row][col];
         ctx.fillStyle = this.colors[grainCount];
         ctx.fillRect(x, y, width, height);

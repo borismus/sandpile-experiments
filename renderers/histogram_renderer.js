@@ -46,10 +46,11 @@ export class HistogramRenderer {
     const keys = Object.keys(allDict);
     const largestAvo = keys[keys.length - 1];
     const numberOfSize1 = allDict[1];
-    ctx.fillText(`largest avalanche: ${largestAvo}`, 10, 10);
-    ctx.fillText(`number of avalanches of size 1: ${numberOfSize1}`, 10, 30);
+    const textX = 20;
+    ctx.fillText(`Largest avalanche: ${largestAvo}`, textX, 10);
+    ctx.fillText(`Number of avalanches of size 1: ${numberOfSize1}`, textX, 30);
     const log2Grains = Math.floor(Math.log2(this.model.grainCount));
-    ctx.fillText(`grains of sand: 2^${log2Grains}`, 10, 50);
+    ctx.fillText(`Grains of sand: 2^${log2Grains}`, textX, 50);
   }
   
 
