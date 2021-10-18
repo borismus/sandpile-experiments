@@ -9,7 +9,7 @@ import {SideRenderer} from './renderers/side_renderer.js';
 const config = {
   gridSize: 201,
   cellSizePx: 4,
-  cellSpacingPx: 1,
+  cellPaddingPx: 1,
   stepsPerFrame: 4,
   modelName: 'classic',
   renderHistogram: renderHistogram,
@@ -59,19 +59,19 @@ function start() {
   const modelClass = modelClassMap[config.modelName];
   model = new ClassicSandpileModel({rows: config.gridSize, cols: config.gridSize});
   renderers = [
-    new HeatmapRenderer(model, {cellSize: config.cellSizePx, cellSpacing: config.cellSpacingPx}),
-    new SideRenderer(model, {cellSize: config.cellSizePx, cellSpacing: config.cellSpacingPx}),
+    new HeatmapRenderer(model, {cellSize: config.cellSizePx, cellPadding: config.cellPaddingPx}),
+    new SideRenderer(model, {cellSize: config.cellSizePx, cellPadding: config.cellPaddingPx}),
   ];
 
   loop();
 }
 
 var gui = new dat.GUI({name: 'Sandpile Config'});
-const gridSize = gui.add(config, 'gridSize');
-const cellSize = gui.add(config, 'cellSizePx', 0, 10);
-const cellSpacing = gui.add(config, 'cellSpacingPx', 0, 5);
-gui.add(config, 'stepsPerFrame', 0, 1000, 1);
 const modelName = gui.add(config, 'modelName', ['classic', 'diagonal', 'probabalistic']);
+const gridSize = gui.add(config, 'gridSize');
+gui.add(config, 'stepsPerFrame', 0, 1000, 1);
+const cellSize = gui.add(config, 'cellSizePx', 0, 10);
+const cellPadding = gui.add(config, 'cellPaddingPx', 0, 5);
 gui.add(config, 'renderHistogram');
 
 gridSize.onChange((value) => {
@@ -84,10 +84,18 @@ modelName.onChange((value) => {
 })
 
 cellSize.onChange((value) => {
-  renderers.map(r => r.cellSize = value);
+  renderers.map(r => {
+    r.cellSize = value;
+    const ctx = r.canvas.getContext('2d');
+    ctx.clearRect(0, 0, r.canvas.width, r.canvas.height);
+  });
 });
-cellSpacing.onChange((value) => {
-  renderers.map(r => r.cellSpacing = value);
+cellPadding.onChange((value) => {
+  renderers.map(r => {
+    r.cellPadding = value;
+    const ctx = r.canvas.getContext('2d');
+    ctx.clearRect(0, 0, r.canvas.width, r.canvas.height);
+  });
 });
 
 

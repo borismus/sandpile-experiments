@@ -1,7 +1,6 @@
 export class SandpileModel {
   cascadeFrequency = {};
   grainCount = 0;
-  
 
   saveCascadeLength(length) {
     if (!this.cascadeFrequency[length]) {

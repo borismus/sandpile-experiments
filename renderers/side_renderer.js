@@ -2,12 +2,12 @@ import {generateColors, createCanvas, DEFAULT_CELL_SIZE} from '../utils.js';
 
 
 export class SideRenderer {
-  constructor(model, {cellSize, cellSpacing} = {}) {
+  constructor(model, {cellSize, cellPadding} = {}) {
     this.model = model;
     this.canvas = createCanvas({width: 800, height: 100});
     this.colors = generateColors(model.maxHeight);
     this.cellSize = cellSize || DEFAULT_CELL_SIZE;
-    this.cellSpacing = cellSpacing || 1;
+    this.cellPadding = cellPadding || 1;
   }
 
   render() {
@@ -17,8 +17,8 @@ export class SideRenderer {
     const centerRow = grid[row];
     for (let col = 0; col < centerRow.length; col++) {
       const x = col * this.cellSize;
-      const width = this.cellSize - this.cellSpacing;
-      const height = this.cellSize - this.cellSpacing;
+      const width = this.cellSize - this.cellPadding;
+      const height = this.cellSize - this.cellPadding;
       const grainCount = grid[row][col];
       for (let i = 0; i < grainCount + 1; i++) {
         const y = (this.model.maxHeight - i) * this.cellSize;
