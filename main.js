@@ -57,7 +57,7 @@ function start() {
   }
 
   const modelClass = modelClassMap[config.modelName];
-  model = new ClassicSandpileModel({rows: config.gridSize, cols: config.gridSize});
+  model = new modelClass({rows: config.gridSize, cols: config.gridSize});
   renderers = [
     new HeatmapRenderer(model, {cellSize: config.cellSizePx, cellPadding: config.cellPaddingPx}),
     new SideRenderer(model, {cellSize: config.cellSizePx, cellPadding: config.cellPaddingPx}),
@@ -97,11 +97,5 @@ cellPadding.onChange((value) => {
     ctx.clearRect(0, 0, r.canvas.width, r.canvas.height);
   });
 });
-
-
-document.querySelector('button#update').addEventListener('click', () => {
-  histRenderer.render();
-})
-
 
 start();

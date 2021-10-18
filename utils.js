@@ -7,10 +7,14 @@ export function createEmptyGrid(rows, cols) {
 }
 
 // const DEFAULT_COLORS = ['#3288bd', '#99d594', '#fee08b', '#d53e4f'];
-const DEFAULT_COLORS = ['white', 'green', 'purple', 'gold'];
+const FOUR_GOOD_COLORS = ['white', 'green', 'purple', 'gold'];
+const NINE_GOOD_COLORS = ['white', 'lime', 'green', 'pink', 'purple', 'magenta', 'lavender', 'gold', 'yellow']
 export function generateColors(count) {
   if (count === 4) {
-    return DEFAULT_COLORS;
+    return FOUR_GOOD_COLORS;
+  }
+  if (count === 9) {
+    return NINE_GOOD_COLORS;
   }
   const out = [];
   for (let i = 0; i < count; i++) {
