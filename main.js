@@ -96,15 +96,13 @@ relGui.add(relConfig, 'isDiagonal').onChange(start);
 cellSize.onChange((value) => {
   renderers.map(r => {
     r.cellSize = value;
-    const ctx = r.canvas.getContext('2d');
-    ctx.clearRect(0, 0, r.canvas.width, r.canvas.height);
+    r.clear();
   });
 });
 cellPadding.onChange((value) => {
   renderers.map(r => {
     r.cellPadding = value;
-    const ctx = r.canvas.getContext('2d');
-    ctx.clearRect(0, 0, r.canvas.width, r.canvas.height);
+    r.clear();
   });
 });
 

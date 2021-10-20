@@ -1,9 +1,11 @@
 import {createCanvas, generateColors} from '../utils.js';
+import {Renderer} from './renderer.js';
 
 const BUCKET_COUNT = 100;
 
-export class HistogramRenderer {
+export class HistogramRenderer extends Renderer {
   constructor(model) {
+    super();
     this.model = model;
     this.canvas = createCanvas(640, 320);
   }

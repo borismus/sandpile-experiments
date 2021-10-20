@@ -1,8 +1,10 @@
 import {generateColors, createCanvas, DEFAULT_CELL_SIZE} from '../utils.js';
+import {Renderer} from './renderer.js';
 
 
-export class HeatmapRenderer {
+export class HeatmapRenderer extends Renderer {
   constructor(model, {cellSize = DEFAULT_CELL_SIZE, cellPadding = 1} = {}) {
+    super();
     this.model = model;
     this.canvas = createCanvas();
     this.colors = generateColors(model.maxHeight);
