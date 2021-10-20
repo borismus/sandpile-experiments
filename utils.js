@@ -10,6 +10,9 @@ export function createEmptyGrid(rows, cols) {
 const FOUR_GOOD_COLORS = ['white', 'green', 'purple', 'gold'];
 const NINE_GOOD_COLORS = ['white', 'lime', 'green', 'pink', 'purple', 'magenta', 'lavender', 'gold', 'yellow']
 export function generateColors(count) {
+  if (count === 1) {
+    return ['black'];
+  }
   if (count === 4) {
     return FOUR_GOOD_COLORS;
   }
@@ -19,14 +22,40 @@ export function generateColors(count) {
   const out = [];
   for (let i = 0; i < count; i++) {
     const percent = i / count;
-    const hue = 200 + Math.floor(percent * 160);
-    const color = `hsl(${hue}, 100%, 50%)`;
-    out.push(color);
+    out.push(interpolateColor('#ff00ff', '#ffffff', percent));
   }
   return out;
 }
 
-export function createCanvas({width=800, height=800} = {}) {
+function interpolateColor(color1, color2, ratio) {
+  color1 = trimLeadingHashIfNeeded(color1);
+  color2 = trimLeadingHashIfNeeded(color2);
+  var hex = function (x) {
+    x = x.toString(16);
+    return (x.length == 1) ? '0' + x : x;
+  };
+
+  var r = Math.ceil(parseInt(color1.substring(0, 2), 16) * ratio + parseInt(color2.substring(0, 2), 16) * (1 - ratio));
+  var g = Math.ceil(parseInt(color1.substring(2, 4), 16) * ratio + parseInt(color2.substring(2, 4), 16) * (1 - ratio));
+  var b = Math.ceil(parseInt(color1.substring(4, 6), 16) * ratio + parseInt(color2.substring(4, 6), 16) * (1 - ratio));
+
+  return '#' + hex(r) + hex(g) + hex(b);
+}
+
+function trimLeadingHashIfNeeded(str) {
+  if (str[0] === '#') {
+    return str.slice(1);
+  }
+  return str;
+}
+
+function hslInterpolate(color1, color2, percent) {
+  // const hue = 200 + Math.floor(percent * 160);
+  const hue = Math.floor(percent * 360);
+  return `hsl(${hue}, 100%, 50%)`;
+}
+
+export function createCanvas({width = 800, height = 800} = {}) {
   const canvas = document.createElement('canvas');
   canvas.width = width;
   canvas.height = height;

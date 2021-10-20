@@ -2,16 +2,18 @@ import {generateColors, createCanvas, DEFAULT_CELL_SIZE} from '../utils.js';
 
 
 export class HeatmapRenderer {
-  constructor(model, {cellSize, cellPadding} = {}) {
+  constructor(model, {cellSize = DEFAULT_CELL_SIZE, cellPadding = 1} = {}) {
     this.model = model;
     this.canvas = createCanvas();
     this.colors = generateColors(model.maxHeight);
 
-    this.cellSize = cellSize || DEFAULT_CELL_SIZE;
-    this.cellPadding = cellPadding || 1;
+    this.cellSize = cellSize;
+    this.cellPadding = cellPadding;
   }
 
   render() {
+    this.colors = generateColors(this.model.maxHeight);
+
     const ctx = this.canvas.getContext('2d');
     const grid = this.model.grid;
     for (let row = 0; row < grid.length; row++) {

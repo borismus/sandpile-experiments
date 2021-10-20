@@ -2,16 +2,20 @@ import {generateColors, createCanvas, DEFAULT_CELL_SIZE} from '../utils.js';
 
 
 export class SideRenderer {
-  constructor(model, {cellSize, cellPadding} = {}) {
+  constructor(model, {cellSize = DEFAULT_CELL_SIZE, cellPadding = 1} = {}) {
     this.model = model;
-    this.canvas = createCanvas({width: 800, height: 100});
+    this.canvas = createCanvas({width: 800, height: 600});
     this.colors = generateColors(model.maxHeight);
-    this.cellSize = cellSize || DEFAULT_CELL_SIZE;
-    this.cellPadding = cellPadding || 1;
+    if (model.variableHeight) {
+      this.colors = ['black'];
+    }
+    this.cellSize = cellSize;
+    this.cellPadding = cellPadding;
   }
 
   render() {
     const ctx = this.canvas.getContext('2d');
+    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     const grid = this.model.grid;
     const row = Math.floor(grid.length / 2);
     const centerRow = grid[row];
@@ -22,7 +26,7 @@ export class SideRenderer {
       const grainCount = grid[row][col];
       for (let i = 0; i < grainCount + 1; i++) {
         const y = (this.model.maxHeight - i) * this.cellSize;
-        ctx.fillStyle = this.colors[i];
+        ctx.fillStyle = this.colors[i % this.colors.length];
         ctx.fillRect(x, y, width, height);
       }
     }

@@ -2,6 +2,7 @@ import dat from "https://unpkg.com/dat.gui/build/dat.gui.module.js"
 
 import {ClassicSandpileModel} from './models/classic_model.js';
 import {DiagonalModel} from './models/diagonal_model.js';
+import {RelativeHeightModel} from "./models/relative_model.js";
 import {HeatmapRenderer} from './renderers/heatmap_renderer.js';
 import {HistogramRenderer} from './renderers/histogram_renderer.js';
 import {SideRenderer} from './renderers/side_renderer.js';
@@ -10,14 +11,20 @@ const config = {
   gridSize: 201,
   cellSizePx: 4,
   cellPaddingPx: 1,
-  stepsPerFrame: 4,
-  modelName: 'classic',
+  stepsPerFrame: 1,
+  modelName: 'relative',
   renderHistogram: renderHistogram,
+}
+
+const relConfig = {
+  spillGravity: false,
+  isDiagonal: false,
 }
 
 const modelClassMap = {
   classic: ClassicSandpileModel,
   diagonal: DiagonalModel,
+  relative: RelativeHeightModel,
   probabalistic: null,
 };
 
@@ -57,7 +64,15 @@ function start() {
   }
 
   const modelClass = modelClassMap[config.modelName];
-  model = new modelClass({rows: config.gridSize, cols: config.gridSize});
+  let extras = {};
+  if (config.modelName === 'relative') {
+    extras = {
+      ...extras,
+      spillGravity: relConfig.spillGravity,
+      isDiagonal: relConfig.isDiagonal,
+    };
+  }
+  model = new modelClass({rows: config.gridSize, cols: config.gridSize, ...extras});
   renderers = [
     new HeatmapRenderer(model, {cellSize: config.cellSizePx, cellPadding: config.cellPaddingPx}),
     new SideRenderer(model, {cellSize: config.cellSizePx, cellPadding: config.cellPaddingPx}),
@@ -67,21 +82,16 @@ function start() {
 }
 
 var gui = new dat.GUI({name: 'Sandpile Config'});
-const modelName = gui.add(config, 'modelName', ['classic', 'diagonal', 'probabalistic']);
-const gridSize = gui.add(config, 'gridSize');
+const modelName = gui.add(config, 'modelName', ['classic', 'diagonal', 'relative', 'probabalistic']).onChange(start);
+const gridSize = gui.add(config, 'gridSize').onChange(start);
 gui.add(config, 'stepsPerFrame', 0, 1000, 1);
 const cellSize = gui.add(config, 'cellSizePx', 0, 10);
 const cellPadding = gui.add(config, 'cellPaddingPx', 0, 5);
 gui.add(config, 'renderHistogram');
 
-gridSize.onChange((value) => {
-  console.log('gridSize.onChange', value);
-  start();
-});
-modelName.onChange((value) => {
-  console.log('modelName.onChange', value);
-  start();
-})
+const relGui = gui.addFolder('relative');
+relGui.add(relConfig, 'spillGravity').onChange(start);
+relGui.add(relConfig, 'isDiagonal').onChange(start);
 
 cellSize.onChange((value) => {
   renderers.map(r => {
@@ -99,3 +109,9 @@ cellPadding.onChange((value) => {
 });
 
 start();
+window.addEventListener('keydown', e => {
+  if (e.key === ' ') {
+    model.addSandAtCenter();
+    console.log('model.grainCount', model.grainCount);
+  }
+})
