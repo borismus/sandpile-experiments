@@ -3,16 +3,17 @@ import {Renderer} from './renderer.js';
 
 
 export class SideRenderer extends Renderer {
-  constructor(model, {cellSize = DEFAULT_CELL_SIZE, cellPadding = 1} = {}) {
+  constructor(model, {cellSize = DEFAULT_CELL_SIZE, cellPadding = 1, yScale=0.3} = {}) {
     super();
     this.model = model;
-    this.canvas = createCanvas({width: 800, height: 600});
+    this.canvas = createCanvas({width: 800, height: 300});
     this.colors = generateColors(model.maxHeight);
     if (model.variableHeight) {
       this.colors = ['black'];
     }
     this.cellSize = cellSize;
     this.cellPadding = cellPadding;
+    this.yScale = yScale;
   }
 
   render() {
@@ -24,10 +25,10 @@ export class SideRenderer extends Renderer {
     for (let col = 0; col < centerRow.length; col++) {
       const x = col * this.cellSize;
       const width = this.cellSize - this.cellPadding;
-      const height = this.cellSize - this.cellPadding;
+      const height = this.cellSize * this.yScale - this.cellPadding;
       const grainCount = grid[row][col];
       for (let i = 0; i < grainCount + 1; i++) {
-        const y = (this.model.maxHeight - i) * this.cellSize;
+        const y = (this.model.maxHeight - i) * this.cellSize * this.yScale;
         ctx.fillStyle = this.colors[i % this.colors.length];
         ctx.fillRect(x, y, width, height);
       }

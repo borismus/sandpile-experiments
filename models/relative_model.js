@@ -13,6 +13,16 @@ import {SandpileModel} from './sandpile_model.js';
  * max_diff := height - neighbor_j.height
  * if max_diff == 8:
  *   collapse, so that height -= 8 and neighbor_i.height++
+ * 
+ * 
+ * Update (Oct 23, 2021): This model doesn't appear to be abelian in the sense 
+ * that it matters which vertex topples if multiple are unstable.
+ * 
+ * Is there another variant of the sandpile model that is abelian?
+ * 
+ * - iter31: 0 0 2 4 6	6	6	4	2	0	0
+ * - iter32: 0 0 2 4 6	7	6	4	2	0	0
+ * - iter33: 
  */
 export class RelativeHeightModel extends SandpileModel {
   maxHeight = 9;
@@ -25,6 +35,7 @@ export class RelativeHeightModel extends SandpileModel {
     this.grid = createEmptyGrid(rows, cols);
     this.spillGravity = spillGravity;
     this.getNeighbors = isDiagonal ? this.getNeighborsDiagonal : this.getNeighborsOrtho;
+    // this.getNeighbors = this.getNeighbors2DSymmetric;
 
     const [cx, cy] = this.center;
     this.neighbourCount = this.getNeighbors(cx, cy).length;
@@ -42,6 +53,7 @@ export class RelativeHeightModel extends SandpileModel {
     const [cx, cy] = this.center;
 
     this.maxHeight = Math.max(this.maxHeight, this.grid[cy][cx] + 1);
+
     this.addSand(cx, cy);
   }
 
@@ -51,6 +63,7 @@ export class RelativeHeightModel extends SandpileModel {
       // We are out of bounds.
       return;
     }
+
     this.grid[y][x]++;
 
     // Compare to the smallest neighbor.
@@ -69,8 +82,7 @@ export class RelativeHeightModel extends SandpileModel {
       return;
     }
 
-    // The structure is unstable, so start a cascade in all eight 
-    // cardinal directions.
+    // The structure is unstable, so start a cascade to all neighbors.
     this.grid[y][x] -= this.neighbourCount;
     if (this.spillGravity) {
       // Spill into the shortest neighbor.
@@ -128,6 +140,22 @@ export class RelativeHeightModel extends SandpileModel {
     return ortho.filter(([x, y]) => !this.outOfBounds(x, y));
   }
 
+  getNeighbors2DSymmetric(x, y) {
+    let out = [];
+    const cx = Math.floor(this.cols / 2);
+    const cy = Math.floor(this.rows / 2);
+    const left = [x-1, y];
+    const right = [x+1, y];
+    const top = [x, y-1];
+    const bottom = [x, y+1];
+    // On the left side, start w/ left, then right.
+    out = out.concat(y < cy ? [top, bottom] : [bottom, top]);
+    out = out.concat(x < cx ? [left, right] : [right, left]);
+    
+    return out.filter(([x, y]) => !this.outOfBounds(x, y));
+  }
+  
+
   drawNeighbors(x, y) {
     const neighbors = this.getNeighbors(x, y);
     const heights = neighbors.map(([x, y]) => this.grid[y][x]);
@@ -135,10 +163,6 @@ export class RelativeHeightModel extends SandpileModel {
     console.log(heights.slice(0, 3));
     console.log(heights.slice(3, 5));
     console.log(heights.slice(5));
-  }
-
-  isSymmetric() {
-    // Check if left and right side of board are symmetric.
   }
 }
 

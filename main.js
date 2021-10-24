@@ -8,12 +8,14 @@ import {HistogramRenderer} from './renderers/histogram_renderer.js';
 import {SideRenderer} from './renderers/side_renderer.js';
 
 const config = {
-  gridSize: 201,
+  rows: 211,
+  cols: 211,
   cellSizePx: 4,
-  cellPaddingPx: 1,
-  stepsPerFrame: 1,
+  cellPaddingPx: .1,
+  stepsPerFrame: 0,
   modelName: 'relative',
   renderHistogram: renderHistogram,
+  checkVerticalSymmetry: checkVerticalSymmetry,
 }
 
 const relConfig = {
@@ -25,7 +27,6 @@ const modelClassMap = {
   classic: ClassicSandpileModel,
   diagonal: DiagonalModel,
   relative: RelativeHeightModel,
-  probabalistic: null,
 };
 
 let model;
@@ -44,6 +45,9 @@ function loop() {
     renderer.render();
   }
   iteration++;
+  // if (!model.isVerticallySymmetric()) {
+  //   // debugger;
+  // }
   if (!stopped) {
     requestAnimationFrame(loop);
   }
@@ -53,6 +57,10 @@ function renderHistogram() {
   stopped = true;
   histRenderer = new HistogramRenderer(model);
   histRenderer.render();
+}
+
+function checkVerticalSymmetry() {
+  alert(`isVerticallySymmetric: ${model.isVerticallySymmetric()}`);
 }
 
 function start() {
@@ -72,22 +80,31 @@ function start() {
       isDiagonal: relConfig.isDiagonal,
     };
   }
-  model = new modelClass({rows: config.gridSize, cols: config.gridSize, ...extras});
+  model = new modelClass({rows: config.rows, cols: config.cols, ...extras});
   renderers = [
     new HeatmapRenderer(model, {cellSize: config.cellSizePx, cellPadding: config.cellPaddingPx}),
     new SideRenderer(model, {cellSize: config.cellSizePx, cellPadding: config.cellPaddingPx}),
   ];
 
+  // Head start.
+  // for (let i = 0; i < 216; i++) {
+  //   model.addSandAtCenter();
+  // }
+
+  // Debug only.
+  window.model = model;
   loop();
 }
 
 var gui = new dat.GUI({name: 'Sandpile Config'});
-const modelName = gui.add(config, 'modelName', ['classic', 'diagonal', 'relative', 'probabalistic']).onChange(start);
-const gridSize = gui.add(config, 'gridSize').onChange(start);
+const modelName = gui.add(config, 'modelName', ['classic', 'diagonal', 'relative']).onChange(start);
+const rows = gui.add(config, 'rows').onChange(start);
+const cols = gui.add(config, 'cols').onChange(start);
 gui.add(config, 'stepsPerFrame', 0, 1000, 1);
 const cellSize = gui.add(config, 'cellSizePx', 0, 10);
 const cellPadding = gui.add(config, 'cellPaddingPx', 0, 5);
 gui.add(config, 'renderHistogram');
+gui.add(config, 'checkVerticalSymmetry');
 
 const relGui = gui.addFolder('relative');
 relGui.add(relConfig, 'spillGravity').onChange(start);

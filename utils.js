@@ -6,8 +6,8 @@ export function createEmptyGrid(rows, cols) {
   return grid;
 }
 
-// const DEFAULT_COLORS = ['#3288bd', '#99d594', '#fee08b', '#d53e4f'];
-const FOUR_GOOD_COLORS = ['white', 'green', 'purple', 'gold'];
+const FOUR_GOOD_COLORS = ['#ffffff', '#32CD32', '#FF00FF', '#EEE8AA'];
+// const FOUR_GOOD_COLORS = ['white', 'green', 'purple', 'gold'];
 const NINE_GOOD_COLORS = ['white', 'lime', 'green', 'pink', 'purple', 'magenta', 'lavender', 'gold', 'yellow']
 export function generateColors(count) {
   if (count === 1) {
@@ -22,12 +22,24 @@ export function generateColors(count) {
   const out = [];
   for (let i = 0; i < count; i++) {
     const percent = i / count;
-    out.push(interpolateColor('#ff00ff', '#ffffff', percent));
+    // out.push(interpolateColor('#ffffff', '#ff00ff', percent));
+    out.push(interpolateColorMulti(FOUR_GOOD_COLORS, percent));
   }
   return out;
 }
 
-function interpolateColor(color1, color2, ratio) {
+function interpolateColorMulti(colorList, percent) {
+  // Figure out which color based on the number of colors
+  const segmentCount = colorList.length - 1;
+  const segmentInd = Math.floor(segmentCount * percent);
+  const color1 = colorList[segmentInd];
+  const color2 = colorList[segmentInd + 1];
+  const percentWithinSegment = (percent - segmentInd / segmentCount) * segmentCount;
+  return interpolateColor(color1, color2, percentWithinSegment)
+
+}
+
+function interpolateColor(color2, color1, ratio) {
   color1 = trimLeadingHashIfNeeded(color1);
   color2 = trimLeadingHashIfNeeded(color2);
   var hex = function (x) {
