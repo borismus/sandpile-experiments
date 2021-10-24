@@ -6,7 +6,7 @@ export function createEmptyGrid(rows, cols) {
   return grid;
 }
 
-const FOUR_GOOD_COLORS = ['#ffffff', '#32CD32', '#FF00FF', '#EEE8AA'];
+const FOUR_GOOD_COLORS = ['#ffffff', '#32CD32', '#6b20a4', '#f8d749'];
 // const FOUR_GOOD_COLORS = ['white', 'green', 'purple', 'gold'];
 const NINE_GOOD_COLORS = ['white', 'lime', 'green', 'pink', 'purple', 'magenta', 'lavender', 'gold', 'yellow']
 export function generateColors(count) {

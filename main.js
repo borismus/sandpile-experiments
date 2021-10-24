@@ -11,8 +11,8 @@ const config = {
   rows: 211,
   cols: 211,
   cellSizePx: 4,
-  cellPaddingPx: .1,
-  stepsPerFrame: 0,
+  cellPaddingPx: 0.2,
+  stepsPerFrame: 1,
   modelName: 'relative',
   renderHistogram: renderHistogram,
   checkVerticalSymmetry: checkVerticalSymmetry,
@@ -20,7 +20,7 @@ const config = {
 
 const relConfig = {
   spillGravity: false,
-  isDiagonal: false,
+  isDiagonal: true,
 }
 
 const modelClassMap = {
