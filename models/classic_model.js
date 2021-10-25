@@ -10,7 +10,6 @@ export class ClassicSandpileModel extends SandpileModel {
     this.cols = cols;
     this.grid = createEmptyGrid(rows, cols);
   }
-  
 
   addSandAtCenter() {
     super.addSandAtCenter();
@@ -32,6 +31,10 @@ export class ClassicSandpileModel extends SandpileModel {
       // This structure is now stable.
       return;
     }
+    this.toppleCell(x, y);
+  }
+
+  toppleCell(x, y) {
     // The structure is unstable, so start a cascade.
     this.grid[y][x] = 0;
     this.addSand(x + 1, y);

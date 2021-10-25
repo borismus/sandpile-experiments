@@ -2,16 +2,17 @@ import dat from "https://unpkg.com/dat.gui/build/dat.gui.module.js"
 
 import {ClassicSandpileModel} from './models/classic_model.js';
 import {DiagonalModel} from './models/diagonal_model.js';
-import {RelativeHeightModel} from "./models/relative_model.js";
+import {RelativeHeightModel} from './models/relative_model.js';
+import {RockpileModel} from './models/rockpile_model.js';
 import {HeatmapRenderer} from './renderers/heatmap_renderer.js';
 import {HistogramRenderer} from './renderers/histogram_renderer.js';
 import {SideRenderer} from './renderers/side_renderer.js';
 
 const config = {
-  rows: 211,
-  cols: 211,
-  cellSizePx: 4,
-  cellPaddingPx: 0.2,
+  rows: 101,
+  cols: 101,
+  cellSizePx: 8,
+  cellPaddingPx: 0.5,
   stepsPerFrame: 1,
   modelName: 'relative',
   renderHistogram: renderHistogram,
@@ -27,6 +28,7 @@ const modelClassMap = {
   classic: ClassicSandpileModel,
   diagonal: DiagonalModel,
   relative: RelativeHeightModel,
+  rockpile: RockpileModel,
 };
 
 let model;
@@ -97,7 +99,7 @@ function start() {
 }
 
 var gui = new dat.GUI({name: 'Sandpile Config'});
-const modelName = gui.add(config, 'modelName', ['classic', 'diagonal', 'relative']).onChange(start);
+const modelName = gui.add(config, 'modelName', Object.keys(modelClassMap)).onChange(start);
 const rows = gui.add(config, 'rows').onChange(start);
 const cols = gui.add(config, 'cols').onChange(start);
 gui.add(config, 'stepsPerFrame', 0, 1000, 1);

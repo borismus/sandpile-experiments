@@ -1,6 +1,14 @@
 export class SandpileModel {
   cascadeFrequency = {};
   grainCount = 0;
+  
+  get renderGrid() {
+    return this.grid;
+  }
+
+  get renderColorCount() {
+    return this.maxHeight;
+  }
 
   saveCascadeLength(length) {
     if (!this.cascadeFrequency[length]) {

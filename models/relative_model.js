@@ -26,7 +26,7 @@ import {SandpileModel} from './sandpile_model.js';
  */
 export class RelativeHeightModel extends SandpileModel {
   maxHeight = 9;
-  variableHeight = true;
+  blackAndWhite = true;
 
   constructor({rows = 101, cols = 101, spillGravity = false, isDiagonal = false} = {}) {
     super(rows, cols);

@@ -7,17 +7,17 @@ export class HeatmapRenderer extends Renderer {
     super();
     this.model = model;
     this.canvas = createCanvas();
-    this.colors = generateColors(model.maxHeight);
+    this.colors = generateColors(model.renderColorCount);
 
     this.cellSize = cellSize;
     this.cellPadding = cellPadding;
   }
 
   render() {
-    this.colors = generateColors(this.model.maxHeight);
+    this.colors = generateColors(this.model.renderColorCount);
 
     const ctx = this.canvas.getContext('2d');
-    const grid = this.model.grid;
+    const grid = this.model.renderGrid;
     for (let row = 0; row < grid.length; row++) {
       for (let col = 0; col < grid[0].length; col++) {
         const x = col * this.cellSize;
